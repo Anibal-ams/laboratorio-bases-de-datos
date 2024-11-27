@@ -1,0 +1,48 @@
+CREATE TABLE Autores (
+    ID INT AUTO_INCREMENT PRIMARY KEY,  -- ID de autor, clave primaria
+    Nombre VARCHAR(255) NOT NULL,       -- Nombre del autor
+    Nacionalidad VARCHAR(100) NOT NULL  -- Nacionalidad del autor
+);
+CREATE TABLE Libros (
+    ID INT AUTO_INCREMENT PRIMARY KEY,   -- ID de libro, clave primaria
+    Titulo VARCHAR(255) NOT NULL,         -- Título del libro
+    Genero VARCHAR(100) NOT NULL,        -- Género del libro
+    fecha_Publicacion INT,                 -- Año de publicación     
+    Autor_ID INT,                        -- Clave foránea para autor
+FOREIGN KEY (Autor_ID) REFERENCES Autores(ID) ON DELETE CASCADE
+);
+INSERT INTO Autores (Nombre, Nacionalidad) 
+VALUES 
+('Gabriel García Márquez', 'Colombiana'),
+('J.K. Rowling', 'Británica'),
+('George Orwell', 'Británica');
+
+INSERT INTO Libros (Titulo, Genero, fecha_Publicacion, Autor_ID) 
+VALUES 
+('Cien anos de soledad', 'Realismo mágico', 1967, 1),  -- Libro de Gabriel García Márquez
+('Harry Potter y la piedra filosofal', 'Fantasía', 1997, 2),  -- Libro de J.K. Rowling
+('1984', 'Distopía', 1949, 3),  -- Libro de George Orwell
+('El otoño del patriarca', 'Realismo mágico', 1975, 1),  -- Otro libro de Gabriel García Márquez
+('Animales Farm', 'Sátira política', 1945, 3);  -- Otro libro de George Orwell
+
+SELECT Libros.Titulo, Libros.Genero, Libros.fecha_Publicacion
+FROM Libros
+JOIN Autores ON Libros.Autor_ID = Autores.ID
+WHERE Autores.Nombre = 'Gabriel García Márquez';
+
+SELECT Titulo, Genero, fecha_Publicacion
+FROM Libros
+WHERE fecha_Publicacion > 2000;
+
+SELECT Autores.Nombre, COUNT(Libros.ID) AS Cantidad_Libros
+FROM Libros
+JOIN Autores ON Libros.Autor_ID = Autores.ID
+GROUP BY Autores.Nombre
+HAVING COUNT(Libros.ID) > 1;
+
+UPDATE Libros
+SET Genero = 'Ciencia Ficción'
+WHERE Titulo = '1984';
+
+DELETE FROM Autores
+WHERE Nombre = 'George Orwell';
